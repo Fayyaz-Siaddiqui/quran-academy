@@ -21,6 +21,9 @@ export default async function api(req: NextApiRequest, res: NextApiResponse) {
     for (const key of [...url.searchParams.keys()]) if (key === 'path' || key.startsWith('nxtP')) url.searchParams.delete(key);
     req.url = url.pathname + (url.searchParams.size ? `?${url.searchParams}` : '');
   }
+  // Next pre-parses req.query (including "path") as an own property, which would shadow Express's
+  // URL-derived query getter. Drop it so Express parses the cleaned URL itself.
+  delete (req as { query?: unknown }).query;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     handler ??= (require('@qa/api/dist/serverless') as { handler: NestHandler }).handler;
