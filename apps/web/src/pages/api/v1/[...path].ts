@@ -14,6 +14,13 @@ type NestHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 let handler: NestHandler | undefined;
 
 export default async function api(req: NextApiRequest, res: NextApiResponse) {
+  // Next adds the catch-all segment ("path" / "nxtPpath") to the query string; the API's strict
+  // validation rejects unknown query params, so strip them before handing the request over.
+  if (req.url?.includes('?')) {
+    const url = new URL(req.url, 'http://internal');
+    for (const key of [...url.searchParams.keys()]) if (key === 'path' || key.startsWith('nxtP')) url.searchParams.delete(key);
+    req.url = url.pathname + (url.searchParams.size ? `?${url.searchParams}` : '');
+  }
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     handler ??= (require('@qa/api/dist/serverless') as { handler: NestHandler }).handler;

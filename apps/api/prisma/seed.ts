@@ -338,7 +338,12 @@ async function seedDemo(academyId: string) {
   const student = await upsertUser('student@demo.local', 'Zayd Ahmed', SystemRole.STUDENT, {
     studentProfile: { create: { dateOfBirth: new Date('2004-03-02'), assignedTeacherId: teacher.id, preferredClassTiming: 'evening' } },
   });
-  await upsertUser('parent@demo.local', 'Mariam Ahmed', SystemRole.PARENT, { parentProfile: { create: {} } });
+  const parent = await upsertUser('parent@demo.local', 'Mariam Ahmed', SystemRole.PARENT, { parentProfile: { create: {} } });
+  await prisma.parentChild.upsert({
+    where: { parentId_childId: { parentId: parent.id, childId: student.id } },
+    create: { parentId: parent.id, childId: student.id, relationship: 'mother' },
+    update: {},
+  });
 
   const tajweed = await prisma.course.findFirstOrThrow({ where: { academyId, slug: 'tajweed' } });
   await prisma.enrollment.upsert({
