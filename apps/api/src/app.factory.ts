@@ -15,11 +15,13 @@ import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter'
 };
 
 /** Builds the fully configured Nest app (middleware, pipes, docs) without listening. */
-export async function createApp(): Promise<NestExpressApplication> {
+export async function createApp(opts: { abortOnError?: boolean } = {}): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     // Raw body is required to verify Zoom webhook signatures.
     rawBody: true,
     bufferLogs: true,
+    // Serverless: surface boot errors to the caller instead of process.exit(1).
+    abortOnError: opts.abortOnError ?? true,
   });
   const config = app.get(ConfigService);
 

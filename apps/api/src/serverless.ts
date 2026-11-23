@@ -14,7 +14,7 @@ function init(): Promise<Handler> {
   // Vercel Marketplace (Upstash) names the Redis URL KV_URL.
   process.env.REDIS_URL ??= process.env.KV_URL ?? process.env.UPSTASH_REDIS_URL;
   process.env.RUN_QUEUE_WORKERS ??= 'false';
-  return createApp().then(async (app) => {
+  return createApp({ abortOnError: false }).then(async (app) => {
     await app.init();
     return app.getHttpAdapter().getInstance() as Handler;
   });
