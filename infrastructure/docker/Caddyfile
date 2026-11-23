@@ -1,0 +1,9 @@
+api.yourdomain.com {
+	encode zstd gzip
+	reverse_proxy api:4000
+	# WebSocket upgrade for Socket.IO is handled automatically by reverse_proxy.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		-Server
+	}
+}

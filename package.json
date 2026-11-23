@@ -1,0 +1,29 @@
+{
+  "name": "quran-academy",
+  "private": true,
+  "version": "0.1.0",
+  "description": "International Online Quran Academy & LMS platform (monorepo)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "build:packages": "npm run build -w @qa/config -w @qa/shared-types -w @qa/shared-validation",
+    "build:api": "npm run build:packages && npm run build -w @qa/api",
+    "build:web": "npm run build:packages && npm run build -w @qa/web",
+    "build": "npm run build:packages && npm run build -w @qa/api && npm run build -w @qa/web",
+    "dev:api": "npm run start:dev -w @qa/api",
+    "dev:web": "npm run dev -w @qa/web",
+    "db:generate": "npm run prisma:generate -w @qa/api",
+    "db:migrate": "npm run prisma:migrate -w @qa/api",
+    "db:deploy": "npm run prisma:deploy -w @qa/api",
+    "db:seed": "npm run prisma:seed -w @qa/api",
+    "infra:up": "docker compose -f infrastructure/docker/docker-compose.dev.yml up -d",
+    "infra:down": "docker compose -f infrastructure/docker/docker-compose.dev.yml down",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  }
+}

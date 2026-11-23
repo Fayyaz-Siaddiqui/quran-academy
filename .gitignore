@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.vercel
+.turbo
+uploads/
+next-env.d.ts
+seed-dist/

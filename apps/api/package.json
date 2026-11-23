@@ -1,0 +1,84 @@
+{
+  "name": "@qa/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "jest",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:seed": "ts-node --transpile-only prisma/seed.ts",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.700.0",
+    "@aws-sdk/lib-storage": "^3.1173.0",
+    "@aws-sdk/s3-request-presigner": "^3.700.0",
+    "@nestjs/bullmq": "^11.0.5",
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/platform-express": "^11.1.0",
+    "@nestjs/platform-socket.io": "^11.1.0",
+    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/throttler": "^6.4.0",
+    "@nestjs/websockets": "^11.1.0",
+    "@node-rs/argon2": "^2.0.2",
+    "@prisma/client": "^6.19.3",
+    "@qa/config": "0.1.0",
+    "@qa/shared-types": "0.1.0",
+    "bullmq": "^5.60.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "cookie-parser": "^1.4.7",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.6.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.0",
+    "qrcode": "^1.5.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.10",
+    "@nestjs/schematics": "^11.0.5",
+    "@nestjs/testing": "^11.1.0",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.15.0",
+    "@types/nodemailer": "^7.0.0",
+    "@types/qrcode": "^1.5.5",
+    "jest": "^30.0.0",
+    "prisma": "^6.19.3",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.9.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testEnvironment": "node"
+  }
+}
