@@ -14,12 +14,16 @@ type NestHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 let handler: NestHandler | undefined;
 
 export default async function api(req: NextApiRequest, res: NextApiResponse) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  handler ??= (require('@qa/api/dist/serverless') as { handler: NestHandler }).handler;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    handler ??= (require('@qa/api/dist/serverless') as { handler: NestHandler }).handler;
     await handler(req, res);
   } catch (err) {
     console.error('API boot failed', err);
-    if (!res.headersSent) res.status(503).json({ message: 'Service is starting, please retry', code: 'API_UNAVAILABLE' });
+    if (!res.headersSent) res.status(503).json({
+        message: 'Service is starting, please retry',
+        code: 'API_UNAVAILABLE',
+        ...(process.env.DEBUG_API_ERRORS === '1' ? { detail: String((err as Error)?.message ?? err).slice(0, 500) } : {}),
+      });
   }
 }
