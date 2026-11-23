@@ -40,7 +40,7 @@ function Player({ id, onClose, title }: { id: string; title?: string; onClose: (
 function RecordingsList() {
   const tz = useAuthStore((s) => s.user?.timezone ?? 'UTC');
   const router = useRouter();
-  const play = useSearchParams().get('play');
+  const play = useSearchParams()!.get('play');
   const q = useQuery({ queryKey: ['recordings'], queryFn: () => api<Recording[]>('/students/me/recordings') });
   const playing = q.data?.find((r) => r.id === play);
 

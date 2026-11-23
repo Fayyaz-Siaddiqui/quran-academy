@@ -12,7 +12,7 @@ import { Field, Input } from '@/components/ui/form-controls';
 import { api, ApiError } from '@/lib/api';
 
 function ResetForm() {
-  const params = useSearchParams();
+  const params = useSearchParams()!; // never null in the App Router (nullable only because src/pages exists)
   const token = params.get('token') ?? '';
   const welcome = params.get('welcome') === '1';
   const [done, setDone] = useState(false);

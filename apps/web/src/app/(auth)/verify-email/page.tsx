@@ -10,7 +10,7 @@ import { api, ApiError } from '@/lib/api';
 type State = { kind: 'loading' } | { kind: 'active' } | { kind: 'pending-approval' } | { kind: 'error'; message: string };
 
 function Verify() {
-  const token = useSearchParams().get('token');
+  const token = useSearchParams()!.get('token');
   const [state, setState] = useState<State>({ kind: 'loading' });
   const ran = useRef(false);
 

@@ -85,8 +85,8 @@ function Leads() {
   const tz = user?.timezone;
   const qc = useQueryClient();
   const router = useRouter();
-  const pathname = usePathname();
-  const tab = useSearchParams().get('tab') === 'messages' ? 'messages' : 'trials';
+  const pathname = usePathname() ?? '';
+  const tab = useSearchParams()!.get('tab') === 'messages' ? 'messages' : 'trials';
   const [status, setStatus] = useState<string>('NEW');
   const [selected, setSelected] = useState<string | null>(null);
   const qs = `?pageSize=50${status ? `&status=${status}` : ''}`;

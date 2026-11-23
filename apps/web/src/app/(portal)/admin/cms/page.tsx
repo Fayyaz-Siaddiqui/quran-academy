@@ -27,8 +27,8 @@ const TABS = [
 function CmsScreen() {
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
-  const pathname = usePathname();
-  const params = useSearchParams();
+  const pathname = usePathname() ?? '';
+  const params = useSearchParams()!; // never null in the App Router (nullable only because src/pages exists)
   const tabs = TABS.filter((t) => can(user, t.perm));
   const requested = params.get('tab');
   const active = tabs.find((t) => t.value === requested)?.value ?? tabs[0]?.value;

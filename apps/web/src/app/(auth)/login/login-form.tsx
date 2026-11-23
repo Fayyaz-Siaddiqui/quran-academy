@@ -20,7 +20,7 @@ function safeNext(next: string | null) {
 
 export function LoginForm() {
   const router = useRouter();
-  const params = useSearchParams();
+  const params = useSearchParams()!; // never null in the App Router (nullable only because src/pages exists)
   const setSession = useAuthStore((s) => s.setSession);
   const [challenge, setChallenge] = useState<string | null>(null);
   const [error, setError] = useState<{ message: string; code?: string } | null>(null);

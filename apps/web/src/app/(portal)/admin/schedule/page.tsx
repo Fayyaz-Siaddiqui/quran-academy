@@ -203,7 +203,7 @@ function ClassDialog({ id, onClose }: { id: string; onClose: () => void }) {
 function Schedule() {
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
-  const params = useSearchParams();
+  const params = useSearchParams()!; // never null in the App Router (nullable only because src/pages exists)
   const [anchor, setAnchor] = useState(() => weekStart(new Date()));
   const [teacherId, setTeacherId] = useState('');
   const [openId, setOpenId] = useState<string | null>(null);

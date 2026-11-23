@@ -123,7 +123,7 @@ function NotificationBell() {
 export function PortalShell({ children }: { children: React.ReactNode }) {
   const { user, ready, clear } = useAuthStore();
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '';
   const nav = useNav();
   const [mobileOpen, setMobileOpen] = useState(false);
   useRealtime();

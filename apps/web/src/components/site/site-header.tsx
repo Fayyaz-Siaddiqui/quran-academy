@@ -20,7 +20,7 @@ const NAV = [
 ];
 
 export function SiteHeader({ siteName, logoUrl }: { siteName: string; logoUrl?: string | null }) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '';
   const [open, setOpen] = useState(false);
   const user = useAuthStore((s) => s.user);
 
