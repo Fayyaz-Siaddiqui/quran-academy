@@ -25,6 +25,7 @@ FROM node:22-bookworm-slim AS runtime
 ENV NODE_ENV=production
 WORKDIR /repo
 RUN apt-get update && apt-get install -y --no-install-recommends openssl tini && rm -rf /var/lib/apt/lists/* \
+ && npm install -g prisma@6.19.3 && npm cache clean --force \
  && useradd --system --uid 1001 app
 COPY --from=build --chown=app /repo/node_modules ./node_modules
 COPY --from=build --chown=app /repo/packages ./packages
@@ -37,5 +38,5 @@ WORKDIR /repo/apps/api
 EXPOSE 4000
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD node -e "fetch('http://127.0.0.1:4000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 ENTRYPOINT ["/usr/bin/tini", "--"]
-# Apply pending migrations, then start.
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+# Apply pending migrations, then start. (The Prisma CLI is a devDependency, so it is installed globally above.)
+CMD ["sh", "-c", "prisma migrate deploy && node dist/main.js"]

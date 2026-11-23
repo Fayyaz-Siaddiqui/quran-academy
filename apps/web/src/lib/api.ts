@@ -3,7 +3,10 @@
 import type { AuthTokensResponse } from '@qa/shared-types';
 import { useAuthStore } from './auth-store';
 
-export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000').replace(/\/$/, '');
+// Unset in a production build = same-origin: /api/v1 and /socket.io are proxied by Next (API_PROXY_TARGET).
+export const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4000')
+).replace(/\/$/, '');
 export const API_BASE = `${API_URL}/api/v1`;
 const ACADEMY = process.env.NEXT_PUBLIC_ACADEMY_SLUG;
 

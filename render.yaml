@@ -1,0 +1,72 @@
+# Render Blueprint — API + PostgreSQL + Redis in one click.
+# Render dashboard → New → Blueprint → pick this repo → Apply.
+# The website stays on Vercel and proxies /api/v1 and /socket.io to this API (API_PROXY_TARGET).
+
+databases:
+  - name: quran-academy-db
+    plan: free
+    region: singapore
+    databaseName: quran_academy
+    user: quran
+    postgresMajorVersion: "16"
+
+services:
+  - type: keyvalue
+    name: quran-academy-redis
+    plan: free
+    region: singapore
+    maxmemoryPolicy: noeviction # BullMQ must never lose jobs to eviction
+    ipAllowList: [] # only reachable from services in this Render account
+
+  - type: web
+    name: quran-academy-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./infrastructure/docker/api.Dockerfile
+    dockerContext: .
+    # Migrate, seed (idempotent: academy, roles, CMS content, admin, demo users/classes), then start.
+    dockerCommand: sh -c "prisma migrate deploy && node seed-dist/seed.js && node dist/main.js"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY_HOPS
+        value: "2" # Vercel proxy + Render load balancer
+      - key: SWAGGER_ENABLED
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quran-academy-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: quran-academy-redis
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_CHALLENGE_SECRET
+        generateValue: true
+      - key: DATA_ENCRYPTION_KEY
+        generateValue: true
+      # Public website (Vercel). Used in email links; update if your Vercel domain differs.
+      - key: APP_URL
+        value: https://quran-academy.vercel.app
+      - key: PUBLIC_SITE_URL
+        value: https://quran-academy.vercel.app
+      - key: CORS_ORIGINS
+        value: https://quran-academy.vercel.app
+      - key: VIDEO_PROVIDER
+        value: auto # Zoom when ZOOM_VIDEO_SDK_KEY/SECRET are added, otherwise Jitsi
+      - key: JITSI_DOMAIN
+        value: meet.ffmuc.net
+      - key: SEED_ADMIN_EMAIL
+        value: admin@test.local
+      - key: SEED_ADMIN_PASSWORD
+        sync: false # entered once when the Blueprint is created
+      - key: SEED_DEMO
+        value: "true"
+      - key: SEED_DEMO_PASSWORD
+        value: DemoPass12345

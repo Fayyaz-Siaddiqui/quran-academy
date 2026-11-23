@@ -17,8 +17,8 @@ export const envValidationSchema = Joi.object({
 
   JWT_ACCESS_SECRET: Joi.string().min(32).required(),
   JWT_CHALLENGE_SECRET: Joi.string().min(32).required(),
-  /** 32-byte key, base64 — encrypts TOTP secrets at rest */
-  DATA_ENCRYPTION_KEY: Joi.string().base64().required(),
+  /** 32-byte base64 key (or any long secret, SHA-256 stretched) — encrypts TOTP secrets at rest */
+  DATA_ENCRYPTION_KEY: Joi.string().min(32).required(),
 
   DEFAULT_ACADEMY_SLUG: Joi.string().default('main'),
 
