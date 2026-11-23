@@ -1,3 +1,4 @@
+import path from 'path';
 import type { NextConfig } from 'next';
 
 const apiOrigin = (() => {
@@ -36,6 +37,13 @@ const proxyTarget = process.env.API_PROXY_TARGET?.replace(/\/$/, '');
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The NestJS API can run inside this deployment (src/pages/api/v1). Keep it and its native /
+  // dynamically-loaded dependencies out of the bundle; Next traces and ships them from node_modules.
+  outputFileTracingRoot: path.join(__dirname, '../..'),
+  serverExternalPackages: ['@qa/api', '@prisma/client', '.prisma/client', '@node-rs/argon2', 'bullmq', 'ioredis', 'nodemailer', '@aws-sdk/client-s3'],
+  outputFileTracingIncludes: {
+    '/api/v1/[...path]': ['../../node_modules/.prisma/client/**/*', '../../node_modules/@prisma/client/**/*', '../../apps/api/dist/**/*'],
+  },
   // socket.io polling uses "/socket.io/?EIO=…"; don't let Next strip the slash.
   skipTrailingSlashRedirect: !!proxyTarget,
   async rewrites() {

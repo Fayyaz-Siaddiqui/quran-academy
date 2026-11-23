@@ -18,7 +18,8 @@ export function useRealtime() {
   const qc = useQueryClient();
 
   useEffect(() => {
-    if (!token) return;
+    // Off on serverless hosts (no long-lived Socket.IO server); pages still refresh via queries.
+    if (!token || process.env.NEXT_PUBLIC_REALTIME === 'off') return;
     // Polling first, then upgrade: works directly and through the same-origin HTTP proxy.
     const socket: Socket = io(`${API_URL}/realtime`, { auth: { token }, transports: ['polling', 'websocket'], withCredentials: true });
 
